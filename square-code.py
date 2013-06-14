@@ -6,7 +6,7 @@ import tempfile
 import re, math
 import platform
 
-import Image, ImageFont, ImageDraw
+import lib.draw_layer as DL
 
 class square_code:
 
@@ -69,6 +69,13 @@ class square_code:
 			print self.ofile
 			sys.exit(2)
 
+		if not(DL.PIL_enabled):
+			print 'Error: Python imaging library not installed'
+			sys.exit(2)
+		else:
+			self.draw_obj = DL.pil_layer()
+			print "Using python imaging library"
+
 		if not(os.path.exists(self.ifile)):
 			print "File/directory does not exist: "+self.ifile
 			sys.exit(2)
@@ -100,16 +107,15 @@ class square_code:
 		os.unlink(self.tmpname)
 
 	def render(self, lines, width, height):
-		im = Image.new('RGB',(width,height),(0xff,0xff,0xff))
-		draw = ImageDraw.Draw(im)
-		font = self.get_font(self.font_size)
+		im = self.draw_obj.get_image((0xff,0xff,0xff), width, height)
+		font = self.draw_obj.get_font(self.font, self.font_size)
 		x = 0
 		y = 0
 		for line in lines:
-			draw.text((x,y),line,font=font,fill=(0,0,0))
-			y += font.getsize(line)[1]
+			self.draw_obj.write_text(im, x, y, line)
+			y += self.draw_obj.text_size(line)[1]
 		if os.path.splitext(self.ofile)[1] == '': self.ofile += ".png"
-		im.save(self.ofile)
+		self.draw_obj.save(im, self.ofile)
 
 	# search system for font file
 	def font_file(self, name):
@@ -135,8 +141,8 @@ class square_code:
 		char_per_line = 1
 		sample = text[0:20]
 		while True:	
-			IF = self.get_font(size)
-			w, char_height = IF.getsize(sample)
+			font_obj = self.draw_obj.get_font(self.font, size)
+			w, char_height = self.draw_obj.text_size(sample)
 			char_width = w / 20.0
 			char_per_line = math.floor(width/char_width)
 			lines = math.ceil(len(text) / char_per_line)
