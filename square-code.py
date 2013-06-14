@@ -69,12 +69,15 @@ class square_code:
 			print self.ofile
 			sys.exit(2)
 
-		if not(DL.PIL_enabled):
-			print 'Error: Python imaging library not installed'
-			sys.exit(2)
-		else:
+		if DL.PIL_enabled:
 			self.draw_obj = DL.pil_layer()
 			print "Using python imaging library"
+		elif DL.Cairo_enabled:
+			self.draw_obj = DL.cairo_layer()
+			print "Using python cairo library"
+		else:
+			print 'Error: no image library found'
+			sys.exit(2)
 
 		if not(os.path.exists(self.ifile)):
 			print "File/directory does not exist: "+self.ifile
