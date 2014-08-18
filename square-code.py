@@ -198,11 +198,11 @@ class square_code:
         directories = []
         # if it's a file, process it
         if os.path.isfile(path) and (self.extensions == [] or os.path.splitext(path)[1] in self.extensions):
-            excluded = false
+            excluded = False
             for x in self.excludes:
                 chk = x.search(os.path.basename(path))
                 if chk != None:
-                    excluded = true
+                    excluded = True
                     break
             if not(excluded):
                 self.codefile_to_temp(path)
@@ -218,11 +218,11 @@ class square_code:
 
         # process directories discovered earlier
         for dir in directories:
-            excluded = false
+            excluded = False
             for x in self.excludes:
                 chk = x.search(os.path.basename(dir))
                 if chk != None:
-                    excluded = true
+                    excluded = True
                     break
             if not(excluded):
                 self.gather_code(dir)
