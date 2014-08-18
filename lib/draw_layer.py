@@ -24,7 +24,7 @@ class draw_layer:
 
 PIL_enabled = True
 try:
-	import Image, ImageFont, ImageDraw
+	from PIL import Image, ImageFont, ImageDraw
 except:
 	PIL_enabled = False
 class pil_layer (draw_layer):
