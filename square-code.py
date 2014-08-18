@@ -117,7 +117,11 @@ class square_code:
         font = self.draw_obj.get_font(self.font, self.font_size)
         x = 0
         y = 0
+        counter = 1
+        num_lines = len(lines)
         for line in lines:
+            print "\rWriting line " + str(counter) + "/" + str(num_lines),
+            counter += 1
             self.draw_obj.write_text(im, x, y, line)
             y += self.draw_obj.text_size(line)[1]
         if os.path.splitext(self.ofile)[1] == '': self.ofile += ".png"
